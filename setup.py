@@ -7,7 +7,7 @@ __package__ = 'gap'
 __version__ = '0.9.0'
 __licence__ = 'LGPL3'
 __author__ = 'Alexandre Decan'
-__url__ = 'https://github.com/AlexandreDecan/secos-activity'
+__url__ = 'https://github.com/AlexandreDecan/gap'
 __description__ = 'GAP - Git Activity Predictor'
 
 

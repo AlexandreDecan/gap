@@ -1,16 +1,18 @@
 # GAP: Forecasting Commit Activity in git Projects
 
-This repository contains the GAP tool and the replication package for our paper *GAP: Forecasting Commit Activity in git Projects*. A link to the paper will be added to this README as soon as the paper is accepted for publication.
+This repository contains the GAP tool used in our paper *GAP: Forecasting Commit Activity in git Projects*. A link to the paper will be added to this README as soon as the paper is available.
+
 
 ## Abstract
 
 Abandonment of active developers poses a significant risk for many open source software projects. This risk can be reduced by forecasting the future activity of contributors involved in such projects.
 
-Focusing on the commit activity of individuals involved in git repositories, this paper proposes a practical probabilistic forecasting model based on the statistical technique of survival analysis.
+Focusing on the commit activity of individuals involved in git repositories, we proposes a practical probabilistic forecasting model based on the statistical technique of survival analysis.
 
 The model is empirically validated on a wide variety of projects accounting for 7,528 git repositories and 5,947 active contributors.
 
 This model is implemented as part of an open source tool, called gap, that predicts future commit activity.
+
 
 ## The GAP tool
 
