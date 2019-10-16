@@ -19,21 +19,20 @@ def dates_to_duration(dates, *, window_size=20):
     kept = dates[-window_size - 1:]  # -1 because intervals vs. bounds
     durations = []
     for first, second in zip(kept[:-1], kept[1:]):
-        duration = (second - first).days - 1
+        duration = (second - first).days
         durations.append(duration)
 
     return durations
 
 
-def model(durations, probabilities=[0.5, 0.75, 0.9], *, return_surv=False):
+def model(durations, probabilities=[0.5, 0.75, 0.9]):
     """
     Return the durations corresponding to given probabilities, using survival analysis.
+
+    TODO: Include right censors based on last known activity
     """
     surv = SurvfuncRight(durations, [1] * len(durations))
-    if return_surv:
-        return surv
-    else:
-        return [surv.quantile(p) for p in probabilities]
+    return [surv.quantile(p) for p in probabilities]
 
 
 def cli():
@@ -41,10 +40,11 @@ def cli():
     parser.add_argument('paths', metavar='PATH', type=str, nargs='*', default=['.'], help='Paths to one or more git repositories')
     parser.add_argument('--date', type=lambda d: dateutil.parser.parse(d).date(), required=False, default=datetime.date.today(), help='Date used for predictions (default to current date)')
     parser.add_argument('--obs', type=int, required=False, default=20, help='Number of observations to consider')
-    parser.add_argument('--probs', metavar='PROB', type=float, nargs='*', required=False, default=[0.5, 0.7, 0.9], help='Probabilities to output, strictly in [0,1].')
+    parser.add_argument('--probs', metavar='PROB', type=float, nargs='*', required=False, default=[0.5, 0.6, 0.7, 0.8, 0.9], help='Probabilities to output, strictly in [0,1].')
     parser.add_argument('--limit', type=int, required=False, default=30, help='Limit contributors to the one that were active at least once during the last x days (default 30)')
     parser.add_argument('--mapping', type=str, nargs='?', help='Mapping file to merge identities. This file must be a csv file where each line contains two values: the name to be merged, and the corresponding identity. Use "IGNORE" as identity to ignore specific names.')
     parser.add_argument('--branches', metavar='BRANCH', type=str, nargs='*', default=list(), help='Git branches to analyse (default to all).')
+    parser.add_argument('--as-dates', dest='as_dates', action='store_true', help='Express predictions using dates instead of time differences in days')
 
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--text', action='store_true', help='Print results as text.')
@@ -129,9 +129,16 @@ def cli():
     if not args.plot:
         for author, commits, predictions in data:
             last = commits[-1]
-            df.at[author, 'last'] = last
+            if args.as_dates:
+                df.at[author, 'last'] = last
+            else:
+                df.at[author, 'last'] = (last - args.date).days
+
             for prob, p in zip(args.probs, predictions):
-                df.at[author, prob] = last + datetime.timedelta(days=int(p))
+                if args.as_dates:
+                    df.at[author, prob] = last + datetime.timedelta(days=int(p))
+                else:
+                    df.at[author, prob] = (last + datetime.timedelta(days=int(p)) - args.date).days
         df = df.sort_values('last', ascending=False)
         df = df.astype(str)
 

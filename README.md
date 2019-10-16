@@ -26,6 +26,7 @@ usage: gap [-h] [--date DATE] [--obs OBS]
            [--probs [PROB [PROB ...]]]
            [--limit LIMIT] [--mapping [MAPPING]]
            [--branches [BRANCH [BRANCH ...]]]
+           [--as-dates]
            [--text | --csv | --json | --plot [PLOT]]
            [PATH [PATH ...]]
 ```
@@ -34,25 +35,31 @@ In its simplest form, GAP only requires a path to the git repositories of the so
 
 By default, GAP analyses all branches of each repository but the list of branches to analyse can be specified.
 Optionally, a list mapping multiple authors into specific identities can be provided. Such mapping files can be used to support identity merging, data anonymization, or to exclude specific authors from the analysis.
-Parameters can be provided to set the date of the analysis (current date by default), the number of observations used by the model (20 by default), the list of probability values (0.5, 0.7 and 0.9 by default), and the minimal recency of the last activity (30 days by default).
+Parameters can be provided to set the date of the analysis (current date by default), the number of observations used by the model (20 by default), the list of probability values (0.5, 0.6, 0.7, 0.8 and 0.9 by default), and the minimal recency of the last activity (30 days by default).
+Predictions can be expressed either as dates or as relative time differences (by default).
+
 
 ```
-$ gap ./repo --date 2019-05-01 --probs 0.5 0.7 0.9 --mapping anon.csv
+$ gap ./repo --date 2019-05-16 --probs 0.5 0.7 0.9 --mapping anon.csv
   author          last        0.5         0.7         0.9
-bots (grouped)  2019-05-01  2019-05-01  2019-05-01  2019-05-02
-T. Hall         2019-05-01  2019-05-01  2019-05-02  2019-05-03
-R. Cox          2019-04-30  2019-05-02  2019-05-03  2019-05-07
-D. Mckinney     2019-04-29  2019-04-30  2019-05-07  2019-05-23
-A. Gomez        2019-04-29  2019-05-04  2019-05-05  2019-05-14
-C. Jordan       2019-04-29  2019-04-30  2019-05-02  2019-05-06
-H. Hawkins      2019-04-27  2019-04-30  2019-05-04  2019-05-19
-R. Warren       2019-04-26  2019-04-26  2019-04-27  2019-04-29
-R. Martin       2019-04-26  2019-05-03  2019-05-12  2019-08-19
-N. Erickson     2019-04-25  2019-04-28  2019-05-04  2019-05-17
-W. Brewer       2019-04-25  2019-04-27  2019-05-03  2019-05-24
-R. Thompson     2019-04-12  2019-04-13  2019-04-17  2019-05-09
-R. Reilly       2019-04-11  2019-05-08  2019-05-24  2019-05-29
+D. Young          0    1    1   2   3    4
+Z. Andrews        0    4    5   8  10   23
+D. Johnson        0    2    3   4   4    8
+J. Berry          0    3    6   7  29  131
+B. Rodriguez      0    1    1   3   3    6
+bots (grouped)    0    1    1   1   1    2
+M. Johnston       0    3    3   4   6    7
+L. Owen          -1    3    7   7  17   22
+S. Allen         -2    3    7  12  25   38
+J. Schultz       -4    5   10  13  23   38
+J. Smith         -4    0    3   6   7   21
+M. Fry           -9   -6   -3   0   8   21
+J. Lopez        -17  -11  -11  -9  -6   -1
+S. Lewis        -20  -12  -10  -3  50   96
 ```
+
+The output shows, for each recently active contributor (first column), the time difference in days since the last known commit activity (second column), and the expected number of days until the next predicted day of activity according to a certain probability threshold ranging between $0.5$ and $0.9$ (remaining columns).
+The names shown in the output are anonymised and replaced by auto-generated names based on the input mapping file *anon.csv* that we have created for that purpose.
 
 To ease their reuse by other automated tools, the forecasts can be exported into four different formats: (i) simple text, (ii) comma-separated values (csv), (iii) JSON, and (iv) bar activity charts.
 GAP output results can also be used as a basis for a project-level dashboard that visualises the project's past and estimated future commit activities.

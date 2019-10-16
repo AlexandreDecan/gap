@@ -4,7 +4,7 @@ from codecs import open
 
 
 __package__ = 'gap'
-__version__ = '0.9.0'
+__version__ = '0.10.0'
 __licence__ = 'LGPL3'
 __author__ = 'Alexandre Decan'
 __url__ = 'https://github.com/AlexandreDecan/gap'
