@@ -25,16 +25,6 @@ def dates_to_duration(dates, *, window_size=20):
     return durations
 
 
-def model(durations, probabilities=[0.5, 0.75, 0.9]):
-    """
-    Return the durations corresponding to given probabilities, using survival analysis.
-
-    TODO: Include right censors based on last known activity
-    """
-    surv = SurvfuncRight(durations, [1] * len(durations))
-    return [surv.quantile(p) for p in probabilities]
-
-
 def cli():
     parser = argparse.ArgumentParser(description='GAP - Git Activity Predictor')
     parser.add_argument('paths', metavar='PATH', type=str, nargs='*', default=['.'], help='Paths to one or more git repositories')
@@ -71,7 +61,7 @@ def cli():
 
     raw_data = dict()  # author -> dates of activity
 
-    # Get information from git
+    # Get data from git
     for path in args.paths:
         try:
             repo = git.Repo(path)
@@ -105,8 +95,10 @@ def cli():
         durations = dates_to_duration(commits, window_size=args.obs)
 
         if len(durations) >= args.obs:
-            predictions = model(durations, args.probs)
-            last_day = [e for e in commits if e <= args.date][-1]
+            # Currently implemented with no censor
+            surv = SurvfuncRight(durations, [1] * len(durations))
+            predictions = [surv.quantile(p) for p in args.probs]
+            last_day = commits[-1]
 
             if last_day >= args.date - datetime.timedelta(args.limit):
                 data.append((
@@ -139,7 +131,8 @@ def cli():
                     df.at[author, prob] = last + datetime.timedelta(days=int(p))
                 else:
                     df.at[author, prob] = (last + datetime.timedelta(days=int(p)) - args.date).days
-        df = df.sort_values('last', ascending=False)
+
+        df = df.sort_values(['last'] + args.probs, ascending=[False] + [True] * len(args.probs))
         df = df.astype(str)
 
         if args.text:
