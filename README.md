@@ -41,7 +41,8 @@ Predictions can be expressed either as dates or as relative time differences (by
 
 ```
 $ gap ./repo --date 2019-05-16 --probs 0.5 0.7 0.9 --mapping anon.csv
-  author          last        0.5         0.7         0.9
+               last  0.5  0.6 0.7 0.8  0.9
+author
 D. Young          0    1    1   2   3    4
 Z. Andrews        0    4    5   8  10   23
 D. Johnson        0    2    3   4   4    8
