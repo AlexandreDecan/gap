@@ -159,12 +159,18 @@ def cli():
             for e in commits:
                 activities.append((author, (e - args.date).days))
 
-            previous = 0
+            previous = previous_previous = 0
             for d, p in zip(predictions, args.probs):
-                forecasts.append((
-                    author, last + previous, last + d, p
-                ))
-                previous = d
+                if d > previous:
+                    forecasts.append((
+                        author, last + previous, last + d, p
+                    ))
+                    previous_previous = previous
+                    previous = d
+                else:
+                    forecasts.append((
+                        author, last + previous_previous, last + d, p
+                    ))
 
         activities = pandas.DataFrame(columns=['author', 'day'], data=activities)
         forecasts = pandas.DataFrame(columns=['author', 'fromd', 'tod', 'p'], data=forecasts)
@@ -179,14 +185,14 @@ def cli():
             )
             + p9.geom_segment(
                 p9.aes('fromd + 0.5', 'author', xend='tod + 0.5', yend='author', alpha='factor(p)'),
-                data=forecasts,
+                data=forecasts.sort_values('p').drop_duplicates(['author', 'fromd', 'tod'], keep='last'),
                 size=4,
                 color='steelblue',
             )
             + p9.geom_vline(xintercept=0, color='r', alpha=0.5, linetype='dashed')
             + p9.scale_x_continuous(name='  <<  past days {:^20} future days  >>'.format(str(args.date)), breaks=range(-VIEW_LIMIT // 7 * 7, (VIEW_LIMIT // 7 * 7) + 1, 7), minor_breaks=6)
             + p9.scale_y_discrete(name='', limits=activities.sort_values('day', ascending=False)['author'].unique())
-            + p9.scale_alpha_discrete(range=(1, 0.2),  name=' ')
+            + p9.scale_alpha_discrete(range=(0.1, 1),  name=' ')
             + p9.coord_cartesian(xlim=(-VIEW_LIMIT, VIEW_LIMIT))
             + p9.theme_matplotlib()
             + p9.theme(
