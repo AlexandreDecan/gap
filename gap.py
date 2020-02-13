@@ -192,7 +192,7 @@ def cli():
             + p9.geom_vline(xintercept=0, color='r', alpha=0.5, linetype='dashed')
             + p9.scale_x_continuous(name='  <<  past days {:^20} future days  >>'.format(str(args.date)), breaks=range(-VIEW_LIMIT // 7 * 7, (VIEW_LIMIT // 7 * 7) + 1, 7), minor_breaks=6)
             + p9.scale_y_discrete(name='', limits=activities.sort_values('day', ascending=False)['author'].unique())
-            + p9.scale_alpha_discrete(range=(0.1, 1),  name=' ')
+            + p9.scale_alpha_discrete(range=(0.2, 1),  name=' ')
             + p9.coord_cartesian(xlim=(-VIEW_LIMIT, VIEW_LIMIT))
             + p9.theme_matplotlib()
             + p9.theme(
