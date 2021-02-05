@@ -1,24 +1,27 @@
 # GAP: Forecasting Commit Activity in git Projects
 
-This repository contains the GAP tool used in our paper *GAP: Forecasting Commit Activity in git Projects*. A link to the paper will be added to this README as soon as the paper is available.
+This repository contains the GAP tool presented in the companion research article [GAP: Forecasting Commit Activity in git Projects](https://www.doi.org/10.1016/j.jss.2020.110573) published in 2019 in the Journal on Systems and Software.
+GAP analyses and forecasts developer activity in the form of git commits by relying on a simple probabilistic model.
+
+The tool has been developed by Alexandre Decan, principal researcher at the [Software Engineering Lab](https://informatique.umons.ac.be/genlog) of the [University of Mons](https://www.umons.ac.be) (Belgium)
+in the context of the [SECO-ASSIST Excellence of Science](https://secoassist.github.io) research project.
 
 
-## Abstract
+## Tool description
 
-Abandonment of active developers poses a significant risk for many open source software projects. This risk can be reduced by forecasting the future activity of contributors involved in such projects.
-
-Focusing on the commit activity of individuals involved in git repositories, we propose a practical probabilistic forecasting model based on the statistical technique of survival analysis.
-
-The model is empirically validated on a wide variety of projects accounting for 7,528 git repositories and 5,947 active contributors.
-
-This model is implemented as part of an open source tool, called gap, that predicts future commit activity.
+Abandonment of active developers poses a significant risk for many open source software projects. This risk can be reduced by forecasting the future activity of contributors involved in such projects. Focusing on the commit activity of individuals involved in git repositories, we propose a practical probabilistic forecasting model that has been validated on a wide variety of projects accounting for 7,528 git repositories and 5,947 active contributors. This model is implemented as part of the GAP open source tool, that predicts future commit activity.
 
 
-## The GAP tool
+## Installation
 
-GAP makes it possible to analyse and forecast developer activity in the form of git commits.
 The tool is available at the root of this repository (*gap.py*). The tool can be downloaded and used as a Python script (the usual way) or installed through pip (`pip install git+https://github.com/AlexandreDecan/gap`). The dependencies will be automatically installed.
-Gap is released under LGPL3.
+
+## License
+
+GAP is released under LGPLv3 - GNU Lesser General Public License, version3.
+
+## Usage
+
 
 ```
 $ gap -h
