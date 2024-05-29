@@ -1,3 +1,5 @@
+[![SWH](https://archive.softwareheritage.org/badge/origin/https://github.com/AlexandreDecan/gap/)](https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/AlexandreDecan/gap)
+
 # GAP: Forecasting Commit Activity in git Projects
 
 This repository contains the GAP tool presented in the companion research article [GAP: Forecasting Commit Activity in git Projects](https://www.doi.org/10.1016/j.jss.2020.110573) published in 2019 in the Journal on Systems and Software.
